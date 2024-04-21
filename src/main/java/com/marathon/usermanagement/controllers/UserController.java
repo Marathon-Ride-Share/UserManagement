@@ -21,20 +21,31 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<User> registerUser(@RequestBody User user) {
         User newUser = userService.registerUser(user);
-        return ResponseEntity.ok(newUser);
+
+        if (newUser != null) {
+            return ResponseEntity.ok(newUser);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+        
     }
 
     // PUT /users/{userId} - Update a user's personal information
     @PutMapping("/{userId}")
-    public ResponseEntity<User> updateUser(@PathVariable Long userId, @RequestBody User user) {
-        User updatedUser = userService.updateUser(userId, user);
+    public ResponseEntity<User> updateUser(@PathVariable String username, @RequestBody User user) {
+        User updatedUser = userService.updateUser(username, user);
         return ResponseEntity.ok(updatedUser);
     }
 
     // GET /users/{userId} - Get a user's information
     @GetMapping("/{userId}")
-    public ResponseEntity<User> getUser(@PathVariable Long userId) {
+    public ResponseEntity<User> getUser(@PathVariable String userId) {
         User user = userService.getUserById(userId);
-        return ResponseEntity.ok(user);
+       if (user != null) {
+            user.setPasswordToNull();
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

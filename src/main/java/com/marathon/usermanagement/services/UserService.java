@@ -1,25 +1,45 @@
+package com.marathon.usermanagement.services;
+
+import org.springframework.stereotype.Service;
+import com.marathon.usermanagement.models.User;
+import com.marathon.usermanagement.utils.UserRepo;
+import org.springframework.beans.factory.annotation.Autowired;
+
 @Service
 public class UserService {
 
-    private UserRepository userRepository;
-    private KafkaSenderService kafkaSenderService;
+    private UserRepo userRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, KafkaSenderService kafkaSenderService) {
+    public UserService(UserRepo userRepository) {
         this.userRepository = userRepository;
-        this.kafkaSenderService = kafkaSenderService;
     }
 
-    public void sendUserByIdToKafka(Long userId) {
-        User user = userRepository.findById(userId).orElse(null);
-        if (user != null) {
-            String userJson = convertUserToJson(user);
-            kafkaSenderService.sendUser("user-topic", userJson);
+    public User registerUser(User user) {
+        User foundUser = userRepository.findById(user.getUsername()).orElse(null);
+
+        if (foundUser == null) {
+            userRepository.save(user);
+            return user;
+        } else {
+            return null;
         }
     }
 
-    private String convertUserToJson(User user) {
-        // Convert the user object to JSON
-        // You can use libraries like Jackson or Gson for this
+    public User updateUser(String username, User user) {
+        User foundUser = userRepository.findById(username).orElse(null);
+
+        if (foundUser == null) {
+            return null;
+        } else {
+            user.setUsername(username);
+            userRepository.save(user);
+            return user;
+        }
+        
+    }
+
+    public User getUserById(String username) {
+        return userRepository.findById(username).orElse(null);
     }
 }

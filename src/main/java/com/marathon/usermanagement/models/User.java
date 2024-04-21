@@ -1,10 +1,14 @@
+package com.marathon.usermanagement.models;
+
 import org.springframework.data.annotation.Id;
+import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
+@Data
 public class User {
+    @Id
     private String username;
-    private String password;
     private String password;
     private String dl_info;
     private String make;
@@ -21,5 +25,20 @@ public class User {
         this.color = color;
         this.plate_number = plate_number;
     }
-    // other fields, getters, and setters
+
+    public String getUsername() {
+        return this.username;
+    }
+
+    public void setUsername(String newUsername) {
+        this.username = newUsername;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public void setPasswordToNull() {
+        this.password = null;
+    }
 }
