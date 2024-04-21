@@ -15,8 +15,9 @@ public class User {
     private String model;
     private String color;
     private String plate_number;
+    private float rating;
 
-    public User(String username, String password, String dl_info, String make, String model, String color, String plate_number) {
+    public User(String username, String password, String dl_info, String make, String model, String color, String plate_number, float rating) {
         this.username = username;
         this.password = password;
         this.dl_info = dl_info;
@@ -24,6 +25,7 @@ public class User {
         this.model = model;
         this.color = color;
         this.plate_number = plate_number;
+        this.rating = rating;
     }
 
     public String getUsername() {
