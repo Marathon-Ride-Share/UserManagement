@@ -43,4 +43,8 @@ public class User {
     public void setPassword(String newPassword) {
         this.password = newPassword;
     }
+
+    public String getDLInfo() {
+        return this.dl_info;
+    }
 }

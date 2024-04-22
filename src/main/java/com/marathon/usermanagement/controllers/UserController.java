@@ -2,6 +2,7 @@ package com.marathon.usermanagement.controllers;
 
 import com.marathon.usermanagement.models.User;
 import com.marathon.usermanagement.utils.JwtUtil;
+import com.marathon.usermanagement.utils.LoginRes;
 import com.marathon.usermanagement.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -46,10 +47,19 @@ public class UserController {
         String rawPassword = credentials.get("password");
         
         User user = userService.getUserById(username);
+        LoginRes res = new LoginRes();
+
+        if (user.getDLInfo() == null) {
+            res.setIsDriver(false);
+        } else {
+            res.setIsDriver(true);
+        }
 
         if (user != null && passwordEncoder.matches(rawPassword, user.getPassword())) {
             final String jwt = jwtUtil.generateToken(user.getUsername());
-            return ResponseEntity.ok(jwt);
+            res.setJwt(jwt);
+
+            return ResponseEntity.ok(res);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error during authentication");
         }
