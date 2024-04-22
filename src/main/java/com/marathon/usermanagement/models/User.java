@@ -40,7 +40,7 @@ public class User {
         return this.password;
     }
 
-    public void setPasswordToNull() {
-        this.password = null;
+    public void setPassword(String newPassword) {
+        this.password = newPassword;
     }
 }
