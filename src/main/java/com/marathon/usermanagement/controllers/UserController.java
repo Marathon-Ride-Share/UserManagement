@@ -57,6 +57,7 @@ public class UserController {
 
         if (user != null && passwordEncoder.matches(rawPassword, user.getPassword())) {
             final String jwt = jwtUtil.generateToken(user.getUsername());
+            res.setUsername(user.getUsername());
             res.setJwt(jwt);
 
             return ResponseEntity.ok(res);
