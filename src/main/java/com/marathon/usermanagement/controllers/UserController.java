@@ -5,6 +5,7 @@ import com.marathon.usermanagement.utils.JwtUtil;
 import com.marathon.usermanagement.utils.LoginRes;
 import com.marathon.usermanagement.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -58,9 +59,11 @@ public class UserController {
         if (user != null && passwordEncoder.matches(rawPassword, user.getPassword())) {
             final String jwt = jwtUtil.generateToken(user.getUsername());
             res.setUsername(user.getUsername());
-            res.setJwt(jwt);
 
-            return ResponseEntity.ok(res);
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "Bearer " + jwt);
+
+            return new ResponseEntity<>(res, headers, HttpStatus.OK);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error during authentication");
         }
