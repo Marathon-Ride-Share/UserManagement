@@ -46,12 +46,12 @@ public class UserController {
     }
 
     // POST /users/login - Login a user
-    @PostMapping("/login")
+    @PostMapping("/users/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody Map<String, String> credentials) {
         System.out.println("login!!!");
         String username = credentials.get("username");
         String rawPassword = credentials.get("password");
-        
+
         User user = userService.getUserById(username);
         LoginRes res = new LoginRes();
 
