@@ -93,8 +93,8 @@ public class UserController {
 
     // PUT /users/{userId} - Update a user's personal information
     @PutMapping("/users/{userId}")
-    public ResponseEntity<?> updateUser(@PathVariable String username, @RequestBody User user) {
-        User updatedUser = userService.updateUser(username, user);
+    public ResponseEntity<?> updateUser(@PathVariable String username, @RequestBody float rating) {
+        User updatedUser = userService.updateUserRating(username, rating);
         return ResponseEntity.ok(updatedUser);
     }
 

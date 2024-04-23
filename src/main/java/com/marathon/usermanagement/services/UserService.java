@@ -33,15 +33,15 @@ public class UserService {
         }
     }
 
-    public User updateUser(String username, User user) {
+    public User updateUserRating(String username, float rating) {
         User foundUser = userRepository.findById(username).orElse(null);
 
         if (foundUser == null) {
             return null;
         } else {
-            user.setUsername(username);
-            userRepository.save(user);
-            return user;
+            foundUser.setRating(rating);
+            userRepository.save(foundUser);
+            return foundUser;
         }
         
     }
