@@ -1,17 +1,19 @@
 package com.marathon.usermanagement.utils;
 
+import java.security.Key;
+
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 public class JwtUtil {
 
-    private String secretKey = System.getenv("JWT_SECRET") != null ? System.getenv("JWT_SECRET") : "jwt-secret";
+    private static final String SECRET_KEY = System.getenv("JWT_SECRET") != null ? System.getenv("JWT_SECRET") : "marathon-ride-share-applications-secret-key";
+    private static final Key SIGNING_KEY = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
 
     private int tokenValidityInSeconds = 36000; 
 
@@ -21,7 +23,7 @@ public class JwtUtil {
                 .setSubject(subject)
                 .setIssuedAt(new Date(currentTimeMillis))
                 .setExpiration(new Date(currentTimeMillis + tokenValidityInSeconds * 1000))
-                .signWith(SignatureAlgorithm.HS512, secretKey) // Use HS512 algorithm and your secret key
+                .signWith(SIGNING_KEY) // Use HS512 algorithm and your secret key
                 .compact();
     }
 }
