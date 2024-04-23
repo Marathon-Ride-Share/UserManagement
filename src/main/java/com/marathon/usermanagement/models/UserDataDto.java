@@ -1,15 +1,7 @@
 package com.marathon.usermanagement.models;
 
-import org.springframework.data.annotation.Id;
-import lombok.Data;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-@Document
-@Data
-public class UserDto {
-    @Id
+public class UserDataDto {
     private String username;
-    private String password;
     private String dl_info;
     private String make;
     private String model;
@@ -17,20 +9,8 @@ public class UserDto {
     private String plate_number;
     private float rating;
 
-    // public UserDto(String username, String password) {
-    //     this.username = username;
-    //     this.password = password;
-    //     this.dl_info = null;
-    //     this.make = null;
-    //     this.model = null;
-    //     this.color = null;
-    //     this.plate_number = null;
-    //     this.rating = 0.0f;
-    // }
-
-    public UserDto(String username, String password, String dl_info, String make, String model, String color, String plate_number, float rating) {
+    public UserDataDto(String username, String dl_info, String make, String model, String color, String plate_number, float rating) {
         this.username = username;
-        this.password = password;
         this.dl_info = dl_info;
         this.make = make;
         this.model = model;
@@ -45,14 +25,6 @@ public class UserDto {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return this.password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getDLInfo() {

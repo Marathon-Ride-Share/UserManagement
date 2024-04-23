@@ -1,6 +1,8 @@
 package com.marathon.usermanagement.controllers;
 
 import com.marathon.usermanagement.models.User;
+import com.marathon.usermanagement.models.UserDto;
+import com.marathon.usermanagement.models.UserDataDto;
 import com.marathon.usermanagement.utils.JwtUtil;
 import com.marathon.usermanagement.utils.LoginRes;
 import com.marathon.usermanagement.services.UserService;
@@ -32,9 +34,9 @@ public class UserController {
 
     // POST /users/register - Register a new user
     @PostMapping("/users/register")
-    public ResponseEntity<?> registerUser(@RequestBody User user) {
+    public ResponseEntity<?> registerUser(@RequestBody UserDto userDTO) {
          System.out.println("register!!!");
-        User newUser = userService.registerUser(user);
+        User newUser = userService.registerUser(userDTO);
         System.out.println("registerUser!!!"+newUser);
 
         if (newUser != null) {
@@ -52,18 +54,18 @@ public class UserController {
         String username = credentials.get("username");
         String rawPassword = credentials.get("password");
 
-        User user = userService.getUserById(username);
+        UserDto userDTO = userService.getUserById(username);
         LoginRes res = new LoginRes();
 
-        if (user.getDLInfo() == null) {
+        if (userDTO.getDLInfo() == null) {
             res.setIsDriver(false);
         } else {
             res.setIsDriver(true);
         }
 
-        if (user != null && passwordEncoder.checkPassword(rawPassword, user.getPassword())) {
-            final String jwt = jwtUtil.generateToken(user.getUsername());
-            res.setUsername(user.getUsername());
+        if (userDTO != null && passwordEncoder.checkPassword(rawPassword, userDTO.getPassword())) {
+            final String jwt = jwtUtil.generateToken(userDTO.getUsername());
+            res.setUsername(userDTO.getUsername());
 
             HttpHeaders headers = new HttpHeaders();
             headers.add("Authorization", "Bearer " + jwt);
@@ -77,18 +79,18 @@ public class UserController {
 
     // PUT /users/{userId} - Update a user's personal information
     @PutMapping("/users/{userId}")
-    public ResponseEntity<?> updateUser(@PathVariable String username, @RequestBody User user) {
-        User updatedUser = userService.updateUser(username, user);
+    public ResponseEntity<?> updateUser(@PathVariable String username, @RequestBody UserDto userDTO) {
+        User updatedUser = userService.updateUser(username, userDTO);
         return ResponseEntity.ok(updatedUser);
     }
 
     // GET /users/{userId} - Get a user's information
     @GetMapping("users/{userId}")
     public ResponseEntity<?> getUser(@PathVariable String userId) {
-        User user = userService.getUserById(userId);
-       if (user != null) {
-            user.setPassword(null);
-            return ResponseEntity.ok(user);
+        UserDto userDTO = userService.getUserById(userId);
+       if (userDTO != null) {
+            UserDataDto userData = new UserDataDto(userDTO.getUsername(), userDTO.getDLInfo(), userDTO.getMake(), userDTO.getModel(), userDTO.getColor(), userDTO.getPlateNumber(), userDTO.getRating());
+            return ResponseEntity.ok(userData);
         } else {
             return ResponseEntity.notFound().build();
         }

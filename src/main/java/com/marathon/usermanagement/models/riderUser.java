@@ -1,10 +1,11 @@
 package com.marathon.usermanagement.models;
 
-public class riderUser implements User {
+public class RiderUser implements User {
     private String username;
     private String password;
+    private Boolean isDriver = false;
 
-    public riderUser(String username, String password) {
+    public RiderUser(String username, String password) {
         this.username = username;
         this.password = password;
     }
@@ -21,13 +22,8 @@ public class riderUser implements User {
         return this.password;
     }
 
-    @Override
     public void setPassword(String newPassword) {
         this.password = newPassword;
     }
 
-
-    public String getDLInfo() {
-        return this.dl_info;
-    }
 }

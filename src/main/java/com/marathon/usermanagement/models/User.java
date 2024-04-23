@@ -1,17 +1,13 @@
 package com.marathon.usermanagement.models;
 
-import org.springframework.data.annotation.Id;
-import lombok.Data;
-import org.springframework.data.mongodb.core.mapping.Document;
-
 public interface User {
 
     public String getUsername();
 
-    public void setUsername();
+    public void setUsername(String username);
 
     public String getPassword();
 
-    public void setPassword();
-    
+    public void setPassword(String password);
+
 }
