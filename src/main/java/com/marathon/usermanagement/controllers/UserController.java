@@ -76,14 +76,14 @@ public class UserController {
     }
 
     // PUT /users/{userId} - Update a user's personal information
-    @PutMapping("/{userId}")
+    @PutMapping("/users/{userId}")
     public ResponseEntity<?> updateUser(@PathVariable String username, @RequestBody User user) {
         User updatedUser = userService.updateUser(username, user);
         return ResponseEntity.ok(updatedUser);
     }
 
     // GET /users/{userId} - Get a user's information
-    @GetMapping("/{userId}")
+    @GetMapping("users/{userId}")
     public ResponseEntity<?> getUser(@PathVariable String userId) {
         User user = userService.getUserById(userId);
        if (user != null) {
