@@ -1,6 +1,8 @@
 package com.marathon.usermanagement.controllers;
 
 import com.marathon.usermanagement.models.User;
+import com.marathon.usermanagement.services.UserFactory;
+import com.marathon.usermanagement.models.RegistrationDto;
 import com.marathon.usermanagement.utils.JwtUtil;
 import com.marathon.usermanagement.utils.LoginRes;
 import com.marathon.usermanagement.services.UserService;
@@ -21,19 +23,28 @@ public class UserController {
     private final UserService userService;
     private final JwtUtil jwtUtil;
     private final SecurityConfig passwordEncoder;
+    private final UserFactory userFactory;
 
     @Autowired
-    public UserController(UserService userService, JwtUtil jwtUtil, SecurityConfig passwordEncoder) {
+    public UserController(UserService userService, JwtUtil jwtUtil, SecurityConfig passwordEncoder, UserFactory userFactory) {
         System.out.println("UserController!!!");
         this.userService = userService;
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
+        this.userFactory = userFactory;
     }
 
     // POST /users/register - Register a new user
     @PostMapping("/users/register")
-    public ResponseEntity<?> registerUser(@RequestBody User user) {
-         System.out.println("register!!!");
+    public ResponseEntity<?> registerUser(@RequestBody RegistrationDto form) {
+        System.out.println("register!!!");
+        User user;
+
+        if (form.isDriver()) {
+            user = userFactory.createUser(form.getUsername(), form.getPassword());
+        } else {
+            user = userFactory.createUser(form.getUsername(), form.getPassword(), form.getDlInfo(), form.getMake(), form.getModel(), form.getColor(), form.getPlateNumber(), form.getRating());
+        }
         User newUser = userService.registerUser(user);
         System.out.println("registerUser!!!"+newUser);
 
