@@ -4,34 +4,38 @@ import com.marathon.usermanagement.models.User;
 import com.marathon.usermanagement.utils.JwtUtil;
 import com.marathon.usermanagement.utils.LoginRes;
 import com.marathon.usermanagement.services.UserService;
+import com.marathon.usermanagement.config.SecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
 import java.util.Map;
 
-
+@CrossOrigin
+@Controller
 @RestController
-@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
     private final JwtUtil jwtUtil;
-    private final PasswordEncoder passwordEncoder;
+    private final SecurityConfig passwordEncoder;
 
     @Autowired
-    public UserController(UserService userService, JwtUtil jwtUtil, PasswordEncoder passwordEncoder) {
+    public UserController(UserService userService, JwtUtil jwtUtil, SecurityConfig passwordEncoder) {
+        System.out.println("UserController!!!");
         this.userService = userService;
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
     }
 
     // POST /users/register - Register a new user
-    @PostMapping("/register")
+    @PostMapping("/users/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
+         System.out.println("register!!!");
         User newUser = userService.registerUser(user);
+        System.out.println("registerUser!!!"+newUser);
 
         if (newUser != null) {
             return ResponseEntity.ok(newUser);
@@ -44,6 +48,7 @@ public class UserController {
     // POST /users/login - Login a user
     @PostMapping("/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody Map<String, String> credentials) {
+        System.out.println("login!!!");
         String username = credentials.get("username");
         String rawPassword = credentials.get("password");
         
@@ -56,7 +61,7 @@ public class UserController {
             res.setIsDriver(true);
         }
 
-        if (user != null && passwordEncoder.matches(rawPassword, user.getPassword())) {
+        if (user != null && passwordEncoder.checkPassword(rawPassword, user.getPassword())) {
             final String jwt = jwtUtil.generateToken(user.getUsername());
             res.setUsername(user.getUsername());
 
@@ -65,6 +70,7 @@ public class UserController {
 
             return new ResponseEntity<>(res, headers, HttpStatus.OK);
         } else {
+            System.out.println("login!!!22222");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error during authentication");
         }
     }

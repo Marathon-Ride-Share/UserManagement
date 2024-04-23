@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import com.marathon.usermanagement.models.User;
 import com.marathon.usermanagement.utils.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import com.marathon.usermanagement.config.SecurityConfig;
 
 @Service
 public class UserService {
@@ -12,10 +12,10 @@ public class UserService {
     private UserRepo userRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private SecurityConfig passwordEncoder;
 
     @Autowired
-    public UserService(UserRepo userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepo userRepository, SecurityConfig passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -24,7 +24,7 @@ public class UserService {
         User foundUser = userRepository.findById(user.getUsername()).orElse(null);
 
         if (foundUser == null) {
-            String encodedPassword = passwordEncoder.encode(user.getPassword());
+            String encodedPassword = passwordEncoder.hashPassword(user.getPassword());
             user.setPassword(encodedPassword);
             userRepository.save(user);
             return user;
