@@ -61,7 +61,7 @@ public class UserController {
 
         LoginRes res = new LoginRes();
 
-        if (user.getDLInfo() == null) {
+        if (user.getDLInfo().equals("")) {
             res.setIsDriver(false);
         } else {
             res.setIsDriver(true);
@@ -92,9 +92,9 @@ public class UserController {
     }
 
     // PUT /users/{userId} - Update a user's personal information
-    @PutMapping("/users/{userId}")
-    public ResponseEntity<?> updateUser(@PathVariable String username, @RequestBody float rating) {
-        User updatedUser = userService.updateUserRating(username, rating);
+    @PutMapping("/users/{userId}/{rating}")
+    public ResponseEntity<?> updateUser(@PathVariable String userId, @PathVariable float rating) {
+        User updatedUser = userService.updateUserRating(userId, rating);
         return ResponseEntity.ok(updatedUser);
     }
 
